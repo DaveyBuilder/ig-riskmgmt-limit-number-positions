@@ -2,7 +2,7 @@ import { executeScheduledTask } from './main.js';
 
 export default {
 
-	async fetch(request, env, ctx) {
+	//async fetch(request, env, ctx) {
 
 		// const usingDemoAccount = false;
 
@@ -17,7 +17,7 @@ export default {
 		// return new Response("Cloudflare worker is running.", {
 		// 	headers: { "content-type": "text/plain" },
 		// });
-	},
+	//},
 
 	async scheduled(event, env, ctx) {
 
