@@ -20,7 +20,18 @@ export async function executeScheduledTask(request, env, ctx, usingDemoAccount) 
 		return;
 	}
 
-    const openPositions = await getOpenPositions(env, CST, X_SECURITY_TOKEN, baseURL);
+    const openPositionsData = await getOpenPositions(env, CST, X_SECURITY_TOKEN, baseURL);
+
+    let openPositions = {};
+
+    openPositionsData.positions.forEach(position => {
+        const instrumentName = position.market.instrumentName;
+        if (openPositions[instrumentName]) {
+            openPositions[instrumentName].positions.push(position);
+        } else {
+            openPositions[instrumentName] = { positions: [position] };
+        }
+    });
 
     const numberOfInstruments = Object.keys(openPositions).length;
 

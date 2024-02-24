@@ -15,34 +15,18 @@ export async function getOpenPositions(env, CST, X_SECURITY_TOKEN, baseURL) {
             }
         });
 
-        if (!openPositionsResponse.ok) {
+        if (openPositionsResponse.ok) {
+            console.log(`Get open positions API attempt ${attempts} succeeded`);
+            const openPositionsData = await openPositionsResponse.json();
+            return openPositionsData;
+        } else {
             const responseBody = await openPositionsResponse.json();
-            console.log(`Attempt ${attempts} failed with status: ${openPositionsResponse.status}, Response: ${JSON.stringify(responseBody, null, 2)}`);
+            console.log(`Get open positions attempt ${attempts} failed with status: ${openPositionsResponse.status}, Response: ${JSON.stringify(responseBody, null, 2)}`);
             attempts++;
             if (attempts > 3) {
                 throw new Error(`Error getting open positions. HTTP status: ${openPositionsResponse.status}, Response: ${JSON.stringify(responseBody, null, 2)}`);
             }
-        } else {
-            console.log(`Get open positions API attempt ${attempts} succeeded`);
-            break;
         }
     }
 
-    const openPositionsData = await openPositionsResponse.json();
-
-    let openPositions = {};
-
-    openPositionsData.positions.forEach(position => {
-
-        const instrumentName = position.market.instrumentName;
-
-        if (openPositions[instrumentName]) {
-            openPositions[instrumentName].positions.push(position);
-        } else {
-            openPositions[instrumentName] = { positions: [position] };
-        }
-
-    });
-
-    return openPositions;
 }
